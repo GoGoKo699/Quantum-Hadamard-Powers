@@ -20,7 +20,7 @@ These 30 milestones follow the route from a reversible source to a coherent stat
 
 **Central question.** What does the source prepare, and what is visible in a computational-basis sample?
 
-**Understanding target.** Read $`|\psi\rangle=\sum_y\alpha_y|y\rangle`$ as a unit vector. Connect the sample distribution to $`p_y=|\alpha_y|^2`$ and relative phase to interference.
+**Understanding target.** Read $`\lvert\psi\rangle=\sum_y\alpha_y\lvert y\rangle`$ as a unit vector. Connect the sample distribution to $`p_y=\lvert\alpha_y\rvert^2`$ and relative phase to interference.
 
 **Prerequisites.** This is the starting point.
 
@@ -46,7 +46,7 @@ These 30 milestones follow the route from a reversible source to a coherent stat
 
 **Central question.** Which operations does the algorithm receive from the source?
 
-**Understanding target.** Distinguish a call to prepare $`U|0\rangle`$, a call to $`U^\dagger`$, a stored copy and a classical sample. Account for each use of either source direction.
+**Understanding target.** Distinguish a call to prepare $`U\lvert 0\rangle`$, a call to $`U^\dagger`$, a stored copy and a classical sample. Account for each use of either source direction.
 
 **Prerequisites.** [M01](#m01-computational-basis-amplitudes).
 
@@ -244,7 +244,7 @@ These 30 milestones follow the route from a reversible source to a coherent stat
 
 **Central question.** How can a change of operator increase the weight of the desired component?
 
-**Understanding target.** Explain why $`THT`$ has a ground state proportional to $`T^{-1}|\Phi\rangle`$ when $`H|\Phi\rangle=0`$. Identify which part of the state receives the factor $`1/\sqrt c`$.
+**Understanding target.** Explain why $`THT`$ has a ground state proportional to $`T^{-1}\lvert\Phi\rangle`$ when $`H\lvert\Phi\rangle=0`$. Identify which part of the state receives the factor $`1/\sqrt c`$.
 
 **Prerequisites.** [M07](#m07-product-projectors-and-gaps), [M12](#m12-the-operational-question), [M15](#m15-extracting-one-coherent-label), [M16](#m16-exact-marked-mass).
 

@@ -20,26 +20,26 @@ The anchor develops search using a walk-based approximate reflection inside ampl
 
 | Anchor | This project | Role |
 |---|---|---|
-| Coherent stationary vector $`|\pi\rangle`$ | Product state $`|\Phi\rangle`$ of source registers and a rank register | Starting direction for the search. Its coefficients can carry complex phases. |
+| Coherent stationary vector $`\lvert\pi\rangle`$ | Product state $`\lvert\Phi\rangle`$ of source registers and a rank register | Starting direction for the search. Its coefficients can carry complex phases. |
 | Marked set and its orthogonal projector | Mark projector $`G`$ on valid tuple–rank pairs | Chooses coherent configurations that encode the powered output. |
-| Stationary marked probability $`p_M`$ | $`\mu=\lVert G|\Phi\rangle\rVert^2`$ | Weight of the marked component before filtering. |
+| Stationary marked probability $`p_M`$ | $`\mu=\lVert G\lvert\Phi\rangle\rVert^2`$ | Weight of the marked component before filtering. |
 | Discriminant eigenvalues or singular values, and phase gap of $`W(P)`$ | Spectrum of $`A=I-THT`$ and phase gap of its walk | An eigenvalue $`\lambda`$ gives active phases $`\pm\arccos\lambda`$ in this convention. |
 | Phase-estimation output used in a reflection | Clean signal and zero-phase success flags | Repeated tests damp contributions orthogonal to the desired eigenvector. |
 
-In the anchor, $`\epsilon`$ can denote a lower bound on marked probability. Here $`\varepsilon`$ is the requested output error. The mark weight is $`\mu`$, and the input-dependent collision moment is $`S_r=\sum_y|\alpha_y|^{2r}`$. The algorithm uses the dimension and target accuracy to set its schedule.
+In the anchor, $`\epsilon`$ can denote a lower bound on marked probability. Here $`\varepsilon`$ is the requested output error. The mark weight is $`\mu`$, and the input-dependent collision moment is $`S_r=\sum_y\lvert\alpha_y\rvert^{2r}`$. The algorithm uses the dimension and target accuracy to set its schedule.
 
 ## Follow a three-copy example
 
 Take two labels and prepare
 
 ```math
-|\psi\rangle=\frac{\sqrt 3}{2}|0\rangle+\frac{i}{2}|1\rangle .
+\lvert\psi\rangle=\frac{\sqrt 3}{2}\lvert 0\rangle+\frac{i}{2}\lvert 1\rangle .
 ```
 
 The computational-basis probabilities are $`(3/4,1/4)`$, and the probability of a collision between two independent samples is $`S_2=5/8`$. The normalized Hadamard square is
 
 ```math
-|\psi^{[2]}\rangle=\frac{3|0\rangle-|1\rangle}{\sqrt{10}} .
+\lvert\psi^{[2]}\rangle=\frac{3\lvert 0\rangle-\lvert 1\rangle}{\sqrt{10}} .
 ```
 
 The minus sign comes from $`i^2=-1`$. Measuring the target in the computational basis gives $`(9/10,1/10)`$, which cannot reveal that relative sign.
@@ -54,7 +54,7 @@ The initial weight of the marked component is $`\binom{3}{2}S_2/4=15/32`$. The r
 
 The unfiltered starting vector is a product state. For each coordinate, the rank-one projector onto its starting state is a test that the coordinate agrees with its preparation. These tests commute. Their average has a unique eigenvector with eigenvalue one, the product state, with gap proportional to $`1/t`$. Indexing a single coordinate test in superposition uses two source calls even though the known routing acts on a batch of registers.
 
-The project sets $`H`$ to identity minus that average and lets $`T=I-G+\sqrt c\,G`$. The operator $`THT`$ has bottom eigenvector proportional to $`T^{-1}|\Phi\rangle`$. In that vector the marked component is multiplied by $`1/\sqrt c`$. The tilt preserves the direction of the marked component, so a final mark flag still selects the same collision state. When $`c`$ and $`\mu`$ are comparable, that component becomes appreciable. The eigenphase gap of the walk governs the cost of approaching the tilted vector.
+The project sets $`H`$ to identity minus that average and lets $`T=I-G+\sqrt c\,G`$. The operator $`THT`$ has bottom eigenvector proportional to $`T^{-1}\lvert\Phi\rangle`$. In that vector the marked component is multiplied by $`1/\sqrt c`$. The tilt preserves the direction of the marked component, so a final mark flag still selects the same collision state. When $`c`$ and $`\mu`$ are comparable, that component becomes appreciable. The eigenphase gap of the walk governs the cost of approaching the tilted vector.
 
 At a useful batch size, the mark weight scales as $`t^r S_r`$. Choosing a tilt on the scale $`1/t`$ therefore balances the two weights at $`t\asymp S_r^{-1/(r+1)}`$. The [multiscale schedule](../science/spectral.md) reaches that scale using the known dimension. Successful early runs prepare the same ideal target direction, even though they occur less frequently.
 

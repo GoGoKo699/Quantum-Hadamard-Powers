@@ -20,10 +20,10 @@ The power is coordinatewise in the specified basis. In particular, the complex p
 
 ## Theorem
 
-For every $`0<\epsilon\le 1/4`$, an explicit algorithm reports success with probability at least $`1-\epsilon`$. Conditioned on success, its output density operator $`\rho`$ satisfies
+For every $`0\lt\epsilon\le 1/4`$, an explicit algorithm reports success with probability at least $`1-\epsilon`$. Conditioned on success, its output density operator $`\rho`$ satisfies
 
 ```math
-\frac12\bigl\|\rho-|\psi^{[r]}\rangle\langle\psi^{[r]}|\bigr\|_1\le\epsilon .
+\frac12\bigl\lVert\rho-|\psi^{[r]}\rangle\langle\psi^{[r]}|\bigr\rVert_1\le\epsilon .
 ```
 
 The expected number of calls on each input and the hard number of calls on every branch, respectively, are

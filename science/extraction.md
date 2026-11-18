@@ -41,7 +41,7 @@ If each source slot has auxiliary state $`|g_y\rangle`$ when its label is $`y`$,
 Let $`Q_r(\ell,p)`$ be the probability that each label occurs fewer than $`r`$ times in $`\ell`$ independent draws from $`p`$. The squared norm of the factored marked vector is
 
 ```math
-\mu=\|G|\Phi\rangle\|^2
+\mu=\lVert G|\Phi\rangle\rVert^2
 =\frac{\binom tr}{B_r} S_r Q_r(t-r,p).
 ```
 
@@ -51,4 +51,4 @@ For each $`r`$-subset of the residual positions, its labels all coincide with pr
 Q_r(\ell,p)\ge 1-\binom{\ell}{r}S_r .
 ```
 
-The binomial coefficient is zero when $`\ell<r`$. Directly measuring the mark takes $`t`$ source preparations per attempt. The [spectral algorithm](spectral.md) keeps the same marked direction and raises the probability of reaching it at a smaller batch size.
+The binomial coefficient is zero when $`\ell\lt r`$. Directly measuring the mark takes $`t`$ source preparations per attempt. The [spectral algorithm](spectral.md) keeps the same marked direction and raises the probability of reaching it at a smaller batch size.

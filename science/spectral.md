@@ -26,7 +26,7 @@ A=I-THT=I-T^2+TRT.
 The unique unit vector spanning the eigenvalue-one subspace of $`A`$ is
 
 ```math
-|\xi\rangle=\frac{T^{-1}|\Phi\rangle}{\|T^{-1}|\Phi\rangle\|}.
+|\xi\rangle=\frac{T^{-1}|\Phi\rangle}{\lVert T^{-1}|\Phi\rangle\rVert}.
 ```
 
 Since $`0\le THT\le I`$, $`A`$ is a positive contraction. The positive eigenvalues of $`THT`$ equal those of $`H^{1/2}T^2H^{1/2}`$ by equality of the nonzero spectra of $`BB^\dagger`$ and $`B^\dagger B`$, with $`B=TH^{1/2}`$. The latter operator dominates $`cH`$. The two matrices have equal nullity and the second-smallest eigenvalue of $`cH`$ is at least $`c/(2t)`$. The first excited eigenvalue of $`A`$ is consequently separated from one by at least $`c/(2t)=1/(2t^2)`$.
@@ -69,14 +69,14 @@ on each eigenvector of $`A`$. At most $`L-1`$ controlled steps implement all the
 |f_L(\lambda)|
 \le \frac{1}{L|\sin(\theta/2)|}
 \le \frac14
-\qquad (\lambda<1).
+\qquad (\lambda\lt 1).
 ```
 
 Repeat the successful filter $`J`$ times with clean ancillas and then measure the mark. The unnormalized data vector on the branch where all tests pass is $`G f_L(A)^J|\Phi\rangle`$. Each failed test ends the attempt, and the query analysis counts up to $`J(L-1)`$ controlled steps for each attempt.
 
 ## Bound the error after conditioning
 
-The gap bound controls absolute excited amplitude. A second bound is needed because the mark can be rare at early scales. Write $`\mu=\|G|\Phi\rangle\|^2`$, $`a=\sqrt{1-\mu}`$, $`b=\sqrt\mu`$, and $`n^2=a^2+b^2/c`$. For $`\mu>0`$, the norm $`g`$ of the ideal ground-state part after marking, and the excited norm $`e`$ before filtering, are
+The gap bound controls absolute excited amplitude. A second bound is needed because the mark can be rare at early scales. Write $`\mu=\lVert G|\Phi\rangle\rVert^2`$, $`a=\sqrt{1-\mu}`$, $`b=\sqrt\mu`$, and $`n^2=a^2+b^2/c`$. For $`\mu>0`$, the norm $`g`$ of the ideal ground-state part after marking, and the excited norm $`e`$ before filtering, are
 
 ```math
 g=\frac{(a^2+b^2/\sqrt c)(b/\sqrt c)}{n^2},
@@ -100,10 +100,10 @@ When $`\mu/c`$ is bounded both above and below by positive constants, $`g`$ is b
 
 Take $`t_0`$ to be the smallest power of two at least $`r`$ and set the analysis constant $`\gamma_r=2^{-r-2}`$. Let $`t_\star`$ be the first dyadic $`t\ge t_0`$ satisfying $`t^{r+1}S_r\ge\gamma_r`$. This threshold size appears only in the analysis.
 
-If $`t_\star=t_0`$, the residual length is less than $`r`$, so $`Q_r(t_0-r,p)=1`$. In the other case $`t_\star^{r+1}S_r<2^{r+1}\gamma_r=1/2`$. For each $`t\le t_\star`$ in this case, $`\binom{t-r}{r}S_r\le t^r S_r\le1/(2t)`$, so $`Q_r(t-r,p)\ge1/2`$. At $`t=t_\star`$, the formula for $`\mu`$ shows that $`\mu/c`$ has positive upper and lower bounds depending only on $`r`$. Here $`\binom tr/t^r`$ is bounded below by a positive constant depending only on $`r`$ when $`t\ge r`$. At every earlier dyadic size $`\mu/c`$ stays bounded above as well.
+If $`t_\star=t_0`$, the residual length is less than $`r`$, so $`Q_r(t_0-r,p)=1`$. In the other case $`t_\star^{r+1}S_r\lt 2^{r+1}\gamma_r=1/2`$. For each $`t\le t_\star`$ in this case, $`\binom{t-r}{r}S_r\le t^r S_r\le1/(2t)`$, so $`Q_r(t-r,p)\ge1/2`$. At $`t=t_\star`$, the formula for $`\mu`$ shows that $`\mu/c`$ has positive upper and lower bounds depending only on $`r`$. Here $`\binom tr/t^r`$ is bounded below by a positive constant depending only on $`r`$ when $`t\ge r`$. At every earlier dyadic size $`\mu/c`$ stays bounded above as well.
 
 Use increasing dyadic caps $`t_0,2t_0,4t_0,\ldots`$. At each cap, attempt every dyadic size from $`t_0`$ up to the cap in increasing order, with $`h`$ fresh attempts at each size. Stop on the first successful mark. Let the largest cap be the smallest dyadic size at least $`t_0`$ whose $`\left(r+1\right)`$st power is at least $`N^{r-1}`$. It includes $`t_\star`$ because $`S_r\ge N^{1-r}`$.
 
-At all sizes through $`t_\star`$, choose $`J=O_r(\log(1/\epsilon))`$ so that each successful output is within $`\epsilon/2`$ of the target. At the balanced size $`t_\star`$, choose $`h=O_r(\log(1/\epsilon))`$ so that the probability of failing all its attempts is at most $`\beta=\min(1/4,\epsilon/8)`$. Since each cap tests in increasing order, the total probability of outputting at a size above $`t_\star`$ is at most $`\beta`$. Overall failure also has probability at most $`\beta`$. The conditional output error is then at most $`\epsilon/2+\beta/(1-\beta)<\epsilon`$ by convexity of trace distance.
+At all sizes through $`t_\star`$, choose $`J=O_r(\log(1/\epsilon))`$ so that each successful output is within $`\epsilon/2`$ of the target. At the balanced size $`t_\star`$, choose $`h=O_r(\log(1/\epsilon))`$ so that the probability of failing all its attempts is at most $`\beta=\min(1/4,\epsilon/8)`$. Since each cap tests in increasing order, the total probability of outputting at a size above $`t_\star`$ is at most $`\beta`$. Overall failure also has probability at most $`\beta`$. The conditional output error is then at most $`\epsilon/2+\beta/(1-\beta)\lt\epsilon`$ by convexity of trace distance.
 
 One attempt at size $`t`$ costs $`t`$ preparations and $`O(Jt)`$ source calls in the filter. A cap costs $`O(hJ)`$ times its largest size, since all sizes together form a geometric sum. Reaching a cap $`i`$ doublings past $`t_\star`$ requires failing at least $`i`$ independent batches of attempts at $`t_\star`$, so it has probability at most $`\beta^i`$. The expected and hard source counts are thus proportional to $`hJt_\star`$ and $`hJ`$ times the largest cap, respectively. These are the bounds stated in the [source model](model.md#theorem).
