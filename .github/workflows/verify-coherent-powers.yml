@@ -13,17 +13,18 @@ permissions:
 jobs:
   capture:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 38
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         source:
           - repository: GoGoKo699/Quantum-Coherent-Collisions
             label: collisions
-            revision: ceb652bd6049981bf8a357aac3205f4813459628
+            revision: 7491862f7832af94a6af257462b8b41345eada13
           - repository: GoGoKo699/Quantum-Hadamard-Powers
             label: powers
-            revision: 25fea9a1d584a83b6350e8f28f56ae1b60c15aad
+            revision: ccee91ad8a2342b5ab288a132e028c5ee0c20636
     env:
       CAPTURE_REPOSITORY: ${{ matrix.source.repository }}
       CAPTURE_REVISION: ${{ matrix.source.revision }}
@@ -51,11 +52,27 @@ jobs:
       - name: Compare the pinned GitHub display with the source
         run: |
           export NODE_PATH="$RUNNER_TEMP/math-runtime/node_modules"
-          node tools/verification/hosted_math/capture_hosted_math.cjs \
-            --root "$GITHUB_WORKSPACE/source" \
-            --repository "$CAPTURE_REPOSITORY" \
-            --revision "$CAPTURE_REVISION" \
-            --output "$RUNNER_TEMP/hosted-math"
+          resume=()
+          result=1
+          for attempt in 0 1 2 3 4; do
+            output="$RUNNER_TEMP/hosted-math-$attempt"
+            if node tools/verification/hosted_math/capture_hosted_math.cjs \
+              --root "$GITHUB_WORKSPACE/source" \
+              --repository "$CAPTURE_REPOSITORY" \
+              --revision "$CAPTURE_REVISION" \
+              --output "$output" "${resume[@]}"; then
+              result=0
+              break
+            fi
+            if ! python3 -c 'import json,sys; f=json.load(open(sys.argv[1]))["failures"]; sys.exit(not f or any(x["category"] != "transport_failure" for x in f))' "$output/capture-state.json"; then
+              break
+            fi
+            resume=(--resume-from "$output")
+            if [ "$attempt" -lt 4 ]; then sleep 12; fi
+          done
+          mkdir -p "$RUNNER_TEMP/hosted-math"
+          cp -a "$output/." "$RUNNER_TEMP/hosted-math/"
+          exit "$result"
       - name: Retain the report and visual captures
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
