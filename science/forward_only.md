@@ -56,7 +56,7 @@ Let an algorithm use at most $`q`$ forward queries. On success, distinguish the 
 
 for every choice of the compatible unitary in either case. This uses the trace-distance bound on the probability of any event, applied to the conditional successful state. For each sign, average the algorithm's complete output over Haar-random unitary completions of $`U|0\rangle=|\psi_\pm\rangle`$. The success guarantee survives this averaging.
 
-The two candidates live in the same known two-dimensional linear subspace, $`\operatorname{span}\{|u\rangle,|1\rangle\}`$, which is orthogonal to the source input $`|0\rangle`$. Isogai, Yoshida and Murao's [Theorem 3.3, equation (35), arXiv:2609.38403v2](https://arxiv.org/html/2609.38403v2#S3) gives one channel that uses $`q`$ copies of either candidate and approximates the corresponding Haar-averaged output within trace distance $`q/(N-1)`$ for $`q<N-1`$. The channel can retain the success flag or the final decision bit. The requirement $`q<N-1`$ causes no loss for the asymptotic bound, since $`q\ge N-1`$ is already larger than the claimed order.
+The two candidates live in the same known two-dimensional linear subspace, $`\mathrm{span}\{|u\rangle,|1\rangle\}`$, which is orthogonal to the source input $`|0\rangle`$. Isogai, Yoshida and Murao's [Theorem 3.3, equation (35), arXiv:2609.38403v2](https://arxiv.org/html/2609.38403v2#S3) gives one channel that uses $`q`$ copies of either candidate and approximates the corresponding Haar-averaged output within trace distance $`q/(N-1)`$ for $`q\lt N-1`$. The channel can retain the success flag or the final decision bit. The requirement $`q\lt N-1`$ causes no loss for the asymptotic bound, since $`q\ge N-1`$ is already larger than the claimed order.
 
 By contractivity of trace distance and the triangle inequality, the distance between the two Haar-averaged outputs is at most
 
@@ -88,7 +88,7 @@ Suppose the successful output is only a classical sample, within total variation
 
 and use $`\sqrt{1-p}\,|u\rangle+\sqrt p\,|j\rangle`$ for spike $`j\in\{1,2\}`$. The candidates have the same moment and the same multiset of input probabilities. Their powered distributions place probability $`\lambda`$ on the respective spike and $`1-\lambda`$ on the common uniform bulk. Guess according to the spike if one is seen and guess uniformly otherwise. The correct decision probability on success is at least $`(1+\lambda)/2-\epsilon`$. On failure guess uniformly.
 
-The known linear span has dimension at most three. The copy-simulation error per candidate is at most $`2q/(N-1)`$ for $`2q<N-1`$. The squared source overlap is $`(1-p)^2`$, so the same argument gives
+The known linear span has dimension at most three. The copy-simulation error per candidate is at most $`2q/(N-1)`$ for $`2q\lt N-1`$. The squared source overlap is $`(1-p)^2`$, so the same argument gives
 
 ```math
 \sigma(\lambda-2\epsilon)\le\sqrt{2qp}+\frac{4q}{N-1},
