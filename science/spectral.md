@@ -4,6 +4,8 @@
 
 The mark from exact extraction identifies the desired direction inside the tensor product of source states. The algorithm changes the product projector so that its distinguished eigenvector has more amplitude in that marked direction. A spectral filter then isolates that eigenvector. Marking and extracting after this filter preserves the state announced in the source model.
 
+The construction below chooses its batch size without knowing the collision moment. When a known profile comes with a hard copy budget, the [reflection-budget theorem](reflection_budget.md#broad-and-flat-constructions) instead chooses the tilt from the batch’s mark weight and charges controlled reflections separately.
+
 ## A product operator with a known gap
 
 Choose a dyadic batch size $`t\ge r`$ and let $`P_i`$ project the $`i`$th complete source slot onto $`|\psi\rangle`$. Let $`P_{\mathrm{rank}}`$ project the rank register onto its uniform state. All these projectors commute. Define

@@ -1,4 +1,4 @@
-"""Finite checks of the coherent extraction and filtered source-query algorithm."""
+"""Finite checks of extraction, spectral filtering and source access comparisons."""
 
 from collections import Counter
 from itertools import combinations, product
@@ -226,6 +226,105 @@ def check_evaluator(function, expected_tag_probability):
     check_extraction(alpha, power=2, batch_size=3)
 
 
+def two_heavy_probabilities(scale, tail_size):
+    heavy = (1 + sqrt(tail_size * (tail_size + 2 - scale) / (2 * scale))) / (
+        tail_size + 2
+    )
+    tail = (1 - 2 * heavy) / tail_size
+    np.testing.assert_allclose(2 * heavy + tail_size * tail, 1, rtol=ATOL)
+    np.testing.assert_allclose(2 * heavy**2 + tail_size * tail**2, 1 / scale, rtol=ATOL)
+    return heavy, tail
+
+
+def check_matched_profiles(scale, copy_budget):
+    dimension = scale**2
+    diffuse_tail_size = dimension - 2
+    broad_tail_size = 2 * scale
+    heavy, diffuse = two_heavy_probabilities(scale, diffuse_tail_size)
+    _, broad = two_heavy_probabilities(scale, broad_tail_size)
+    assert scale * diffuse_tail_size * diffuse**2 < 1 / 8
+    assert scale * broad_tail_size * broad**2 > 1 / 4
+
+    cap = 1 / (2 * scale)
+    capped_count = copy_budget - 3
+    middle = (heavy + (copy_budget - 2) * diffuse - capped_count * cap) / 2
+    assert heavy > middle > cap > diffuse > 0
+    remaining_mass = 1 - heavy - 2 * middle - capped_count * cap
+    remaining_square = 1 / scale - heavy**2 - 2 * middle**2 - capped_count * cap**2
+    tail_size = 8 * scale
+    assert copy_budget + tail_size <= dimension
+
+    uniform = np.full(tail_size, remaining_mass / tail_size)
+    packed = np.zeros(tail_size)
+    packed_count = int(remaining_mass / cap)
+    packed[:packed_count] = cap
+    packed[packed_count] = remaining_mass - packed_count * cap
+    uniform_square = uniform @ uniform
+    packed_square = packed @ packed
+    assert uniform_square < remaining_square < packed_square
+    # The displacement from uniform sums to zero, so the squared mass varies
+    # quadratically along the segment from the uniform tail to the packed tail.
+    fraction = sqrt((remaining_square - uniform_square) / (packed_square - uniform_square))
+    tail = uniform + fraction * (packed - uniform)
+    assert np.all((0 <= tail) & (tail <= cap))
+    slow = np.concatenate(([heavy, middle, middle], np.full(capped_count, cap), tail))
+    np.testing.assert_allclose(slow.sum(), 1, rtol=ATOL)
+    np.testing.assert_allclose(slow @ slow, 1 / scale, rtol=ATOL)
+    np.testing.assert_allclose(slow.max(), heavy, rtol=ATOL)
+    largest = np.partition(slow, -copy_budget)[-copy_budget:]
+    np.testing.assert_allclose(largest.sum(), 2 * heavy + (copy_budget - 2) * diffuse, rtol=ATOL)
+    assert scale * (slow[3:] @ slow[3:]) > 1 / 8
+
+
+def check_forward_hard_pair(dimension, power):
+    bulk = dimension - 2
+    odds = bulk ** (-(power - 1) / power)
+    spike_probability = odds / (1 + odds)
+    phase = np.pi / (2 * power)
+    sources = np.full((2, dimension), sqrt((1 - spike_probability) / bulk), dtype=complex)
+    sources[:, 0] = 0
+    sources[:, 1] = sqrt(spike_probability) * np.exp(1j * np.array([phase, -phase]))
+    np.testing.assert_allclose(np.abs(sources[0]), np.abs(sources[1]), atol=ATOL)
+    powered = sources**power
+    moment = np.linalg.norm(powered, axis=1, keepdims=True) ** 2
+    np.testing.assert_allclose(moment, 2 * spike_probability**power, rtol=ATOL)
+    targets = powered / np.sqrt(moment)
+    np.testing.assert_allclose(targets @ targets.conj().T, np.eye(2), atol=ATOL)
+    overlap = abs(np.vdot(*sources)) ** 2
+    expected = 1 - 4 * spike_probability * (1 - spike_probability) * np.sin(phase) ** 2
+    np.testing.assert_allclose(overlap, expected, atol=ATOL)
+
+
+def check_purified_schur(alphabet, environment_size, power, batch_size):
+    source = make_state(alphabet * environment_size).reshape(alphabet, environment_size)
+    density = source @ source.conj().T
+    rank_count = rank_size(power)
+    routed = {}
+    for sample in product(range(alphabet), repeat=batch_size):
+        for selected in valid_subsets(sample, power):
+            unused = residual(sample, selected)
+            value = sample[selected[0]]
+            key = (selected, unused)
+            if key not in routed:
+                routed[key] = np.zeros((alphabet, environment_size**batch_size), dtype=complex)
+            slot_order = (value,) * power + unused
+            routed[key][value] = kron([source[label] for label in slot_order]) / sqrt(rank_count)
+
+    reduced = sum(block @ block.conj().T for block in routed.values())
+    moment = np.trace(density**power).real
+    success = np.trace(reduced).real
+    diagonal = density.diagonal().real
+    no_collision = sum(
+        prod(diagonal[label] for label in unused)
+        for unused in product(range(alphabet), repeat=batch_size - power)
+        if has_no_collision(unused, power)
+    )
+    np.testing.assert_allclose(
+        success, comb(batch_size, power) * moment * no_collision / rank_count, atol=ATOL
+    )
+    np.testing.assert_allclose(reduced / success, density**power / moment, atol=ATOL)
+
+
 def main():
     extraction_tests = 0
     for size, power in product((2, 3, 4), (2, 3)):
@@ -247,7 +346,20 @@ def main():
 
     check_evaluator((2, 3, 1, 0), 1 / 2)
     check_evaluator((0, 0, 2, 2), 1 / 3)
-    print(f"Passed {extraction_tests} extraction, {spectral_tests} spectral, and 2 evaluator checks.")
+    profile_cases = ((256, 6), (1024, 10), (4096, 16))
+    for scale, copy_budget in profile_cases:
+        check_matched_profiles(scale, copy_budget)
+    forward_cases = ((7, 2), (31, 3), (257, 5))
+    for dimension, power in forward_cases:
+        check_forward_hard_pair(dimension, power)
+    purification_cases = ((3, 3, 2, 4), (3, 2, 3, 4))
+    for case in purification_cases:
+        check_purified_schur(*case)
+    print(
+        f"Passed {extraction_tests} extraction, {spectral_tests} spectral, "
+        f"2 evaluator, {len(profile_cases)} profile, {len(forward_cases)} forward-pair, "
+        f"and {len(purification_cases)} purification checks."
+    )
 
 
 if __name__ == "__main__":

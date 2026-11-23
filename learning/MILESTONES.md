@@ -1,6 +1,6 @@
 # Project understanding map
 
-These 30 milestones follow the route from a reversible source to a coherent state with powered amplitudes. The first 12 develop the objects and interfaces that define the problem. The remaining 18 follow the collision extraction, spectral algorithm, query bounds and circuit costs. The [quantum walk bridge](QUANTUM_WALK_BRIDGE.md) identifies the relevant material from one educational anchor and works through a three-copy example.
+These 30 milestones follow the route from state preparation to a coherent output with powered amplitudes. The first 12 develop the objects and interfaces that define the problem. The remaining 18 cover collision extraction, the spectral algorithm, the query comparisons and circuit costs. The [learning bridge](QUANTUM_WALK_BRIDGE.md) identifies the relevant sections of de Wolf’s notes and works through a three-copy example.
 
 ## Route through the project
 
@@ -11,7 +11,7 @@ These 30 milestones follow the route from a reversible source to a coherent stat
 | [M13](#m13-valid-subsets-of-positions)–[M17](#m17-a-collision-scale-for-copies) | Exact coherent extraction and the copy scale |
 | [M18](#m18-tilt-the-marked-component)–[M22](#m22-accuracy-after-postselection) | How a tilted spectral filter accesses the same output |
 | [M23](#m23-the-balanced-batch-size)–[M25](#m25-expected-and-hard-query-budgets) | Balancing and finding the useful batch size |
-| [M26](#m26-the-haar-square-lower-bound)–[M30](#m30-the-complete-algorithm-and-its-scope) | Optimality, matched benchmarks, and implementation scope |
+| [M26](#m26-the-haar-square-lower-bound)–[M30](#m30-the-complete-algorithm-and-its-scope) | Oracle separations, mixed outputs, and implementation scope |
 
 ## Phase I — Background and preliminaries
 
@@ -46,13 +46,13 @@ These 30 milestones follow the route from a reversible source to a coherent stat
 
 **Central question.** Which operations does the algorithm receive from the source?
 
-**Understanding target.** Distinguish a call to prepare $`U\lvert 0\rangle`$, a call to $`U^\dagger`$, a stored copy and a classical sample. Account for each use of either source direction.
+**Understanding target.** Distinguish an ordinary forward call, a call to $`U^\dagger`$, a controlled reflection, a supplied copy and a classical sample. Account for each source call and each supplied copy in the relevant interface.
 
 **Prerequisites.** [M01](#m01-computational-basis-amplitudes).
 
-**Conceptual connection.** Conjugating a known zero-state test by $`U`$ implements a test for the prepared state. This is the operation that coherence and reversibility add.
+**Conceptual connection.** Conjugating a known zero-state test by $`U`$ implements a test for the prepared state. The reflection-budget model supplies this operation directly. The forward-only model supplies ordinary preparation calls and ranges over compatible completions.
 
-**Canonical sources.** [Model and guarantees](../science/model.md) · [Resource accounting](../science/resources.md)
+**Canonical sources.** [Model and guarantees](../science/model.md) · [Forward-only theorem](../science/forward_only.md) · [Reflection-budget theorem](../science/reflection_budget.md) · [Resource accounting](../science/resources.md)
 
 
 ### M04 A flag without reading the label
@@ -354,7 +354,9 @@ These 30 milestones follow the route from a reversible source to a coherent stat
 
 **Conceptual connection.** Squaring is the case with a matching coherent exponent. The construction gives an upper bound for other fixed powers and leaves their sharp lower bounds open.
 
-**Canonical sources.** [Benchmarks](../science/benchmarks.md) · [Model and guarantees](../science/model.md)
+For a different interface, compare the [forward-only hard pair](../science/forward_only.md#a-hard-pair-with-identical-magnitudes). Its powered states are orthogonal even though the preparation states share their complete magnitude profile.
+
+**Canonical sources.** [Benchmarks](../science/benchmarks.md) · [Model and guarantees](../science/model.md) · [Forward-only theorem](../science/forward_only.md)
 
 
 ### M27 The shared evaluator comparison
@@ -387,11 +389,11 @@ These 30 milestones follow the route from a reversible source to a coherent stat
 
 **Central question.** What can still be output when a sampler keeps a hidden register?
 
-**Understanding target.** Track the garbage associated with each selected label. Explain why discarding it preserves the intended label law while it can remove coherence from the surviving quantum register.
+**Understanding target.** Track the auxiliary states associated with each selected label. Explain why tracing them out gives the normalized entrywise power of the reduced input. Compute how a normalized off-diagonal entry changes under power $`r`$.
 
 **Prerequisites.** [M01](#m01-computational-basis-amplitudes), [M04](#m04-a-flag-without-reading-the-label), [M15](#m15-extracting-one-coherent-label), [M27](#m27-the-shared-evaluator-comparison).
 
-**Conceptual connection.** The evaluator benchmark can use a source with retained addresses. The clean coherent theorem requires the output to carry the powered amplitudes themselves.
+**Conceptual connection.** The same circuit handles the joint purification and its reduced state. Measuring the output label recovers the powered probabilities, while retaining it also preserves the entrywise-powered mixed coherence.
 
 **Canonical sources.** [Model and guarantees](../science/model.md) · [Coherent extraction](../science/extraction.md) · [Benchmarks](../science/benchmarks.md)
 
@@ -400,10 +402,10 @@ These 30 milestones follow the route from a reversible source to a coherent stat
 
 **Central question.** How do the extraction, spectral algorithm and comparisons combine into one result?
 
-**Understanding target.** Explain the route from input to heralded output and relate phase preservation, the moment-dependent cost, the optimal square exponent and the matched measured-law separation.
+**Understanding target.** Explain the route from input to heralded output. Then say why equal collision moments, largest probabilities and top-budget masses can still give different reflection exponents.
 
 **Prerequisites.** [M12](#m12-the-operational-question), [M15](#m15-extracting-one-coherent-label), [M21](#m21-filtering-the-tilted-ground-state), [M24](#m24-searching-the-scales), [M25](#m25-expected-and-hard-query-budgets), [M26](#m26-the-haar-square-lower-bound), [M27](#m27-the-shared-evaluator-comparison), [M28](#m28-pricing-the-circuit), [M29](#m29-garbage-and-the-measured-law).
 
-**Conceptual connection.** Use the interface and error guarantee to decide which statement applies to a new task. Separate the coherent proof, measured-law comparison, and circuit cost before drawing conclusions about an application.
+**Conceptual connection.** Compare the Haar square benchmark, the worst-completion forward bound, and the profile-dependent reflection result. Each theorem specifies the available source interface, the accuracy criterion and the charged operations.
 
-**Canonical sources.** [Model and guarantees](../science/model.md) · [Spectral algorithm](../science/spectral.md) · [Benchmarks](../science/benchmarks.md) · [Resource accounting](../science/resources.md)
+**Canonical sources.** [Model and guarantees](../science/model.md) · [Spectral algorithm](../science/spectral.md) · [Benchmarks](../science/benchmarks.md) · [Resource accounting](../science/resources.md) · [Forward-only theorem](../science/forward_only.md) · [Reflection-budget theorem](../science/reflection_budget.md)

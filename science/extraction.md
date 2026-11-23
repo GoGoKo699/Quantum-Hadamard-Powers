@@ -34,7 +34,7 @@ whenever each residual multiplicity is less than $`r`$. Any such $`z`$ and any $
 
 An evaluation of the mark may temporarily store the repeated label, the list of candidates, and the transcript of the sorting network. Erase all label-dependent workspace before output. The position list $`J`$ can be kept through the final routing and then discarded, since it factors from the output.
 
-If each source slot has auxiliary state $`|g_y\rangle`$ when its label is $`y`$, route the complete slots. Clearing the duplicate label registers still leaves the $`r`$ selected auxiliary factors in their original joint branch. The residual and position list continue to factor. This gives the joint state and measured law in the [source model](model.md#sources-with-additional-registers).
+If each source slot has auxiliary state $`|g_y\rangle`$ when its label is $`y`$, route the complete slots. Clearing the duplicate label registers still leaves the $`r`$ selected auxiliary factors in their original joint branch. The residual and position list continue to factor. After tracing the selected auxiliary registers, the label carries the normalized entrywise power of the reduced input state. [Purification access](model.md#sources-with-additional-registers)
 
 ## Compute the marked probability
 

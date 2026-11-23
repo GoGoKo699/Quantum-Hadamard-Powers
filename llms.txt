@@ -1,15 +1,17 @@
 # Quantum Hadamard Powers
 
-> Heralded normalized coordinatewise powers of an unknown quantum state from reversible state preparation, with instance-sensitive source-query bounds and a matched classical benchmark for the measured square law.
+> Heralded normalized coordinatewise powers of quantum states under reversible, ordinary forward-only, and separately budgeted copy and reflection access.
 
 - [Overview and reading routes](README.md)
 - [Input contract, target state, trace error and query theorems](science/model.md)
 - [Exact coherent collision extraction, multiplicities and residual factorization](science/extraction.md)
 - [Local-projector encoding, tilted spectral filter and unknown-moment schedule](science/spectral.md)
+- [Sharp ordinary forward-only bound](science/forward_only.md)
+- [Optimal reflection costs for specified magnitude profiles](science/reflection_budget.md)
 - [Clean Haar lower bound, matched evaluator and classical birthday algorithm](science/benchmarks.md)
 - [Routing, occupancy work, source costs, width and crossover](science/resources.md)
 - [Previous results and source attribution](references/RELATED_WORK.md)
-- [Educational source and notation bridge](learning/QUANTUM_WALK_BRIDGE.md)
+- [Shared educational source and notation bridge](learning/QUANTUM_WALK_BRIDGE.md)
 - [30 project milestones](learning/MILESTONES.md)
 - [Finite checks and reproduction](verification/README.md)
 
@@ -22,8 +24,8 @@
 
 ## Scope of the claims
 
-- A clean source yields a coherent powered state. A source with garbage yields a purification sufficient to sample the powered probabilities.
+- A clean source yields a coherent powered state. Reversible access to a purification yields a joint powered state, whose label reduction is the normalized entrywise power of the reduced input.
 - The earlier collective extraction is exact on its ideal success branch. Finite spectral filtering contributes the stated approximation error.
 - The unknown-moment instance bound is expected query cost. The dimension-based bound gives a hard budget with the residual failure probability included in the accuracy guarantee.
-- The evaluator lower bound applies to the measured square law. The separate Haar-state lower bound applies to coherent squared-state preparation.
+- The evaluator lower bound applies to the measured square law. The Haar lower bound concerns reversible coherent square preparation. The forward-only lower bound ranges over compatible unitary completions, and the separate reflection result fixes a known magnitude profile and a supplied-copy budget.
 - Oracle query savings do not give a gate-time claim without a source-cost and routing comparison.
