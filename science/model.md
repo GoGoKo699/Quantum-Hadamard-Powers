@@ -1,6 +1,6 @@
 # Reversible source model and guarantees
 
-[Exact extraction](extraction.md) · [Spectral algorithm](spectral.md)
+[Exact extraction](extraction.md) · [Spectral algorithm](spectral.md) · [Forward-only access](forward_only.md) · [Copy and reflection budgets](reflection_budget.md)
 
 Let $`\alpha_y`$ denote the complex amplitude of basis label $`y\in\{0,\ldots,N-1\}`$ in a normalized state $`|\psi\rangle`$. A source query applies either $`U`$ or $`U^\dagger`$, where a known computational-basis input $`|0\rangle`$ satisfies
 
@@ -38,6 +38,12 @@ Both bounds charge calls to $`U`$ and $`U^\dagger`$, including calls on branches
 
 For $`r=2`$, the fixed-error worst-case source-query upper bound is $`O(N^{1/3})`$. It applies pointwise, and thus applies to Haar-source inputs as a special case. Bhateja, Esmaili and Mantri's Proposition 8.2 gives the matching order of lower bound at sufficiently small fixed trace error for Haar inputs. The lower bound applies to a hard query budget. Any uniform expected query bound can be converted into a hard budget by truncation at a constant multiple of that bound, at the cost of a small constant addition to the error. [Bhateja, Esmaili and Mantri, Section 8.2](https://arxiv.org/html/2610.06721v1#S8.SS2)
 
+### Other source interfaces
+
+If the source supplies ordinary forward calls only, the worst-case coherent query law is $`\Theta_{r,\sigma,\varepsilon}(N^{1-1/r})`$ at fixed accuracy and success. The lower bound ranges over compatible unitary completions and holds even for a pair with identical known magnitude profiles. The exact copy-based algorithm gives the matching upper bound. [Forward-only theorem](forward_only.md)
+
+If the source supplies separately budgeted copies and controlled reflections, even inputs with the same collision moment can differ in reflection complexity. The shape of the squared output determines whether retaining only its heaviest coordinates meets the coherent error target. [Profile-dependent reflection theorem](reflection_budget.md)
+
 ## Sources with additional registers
 
 A reversible sampler can instead prepare a purification
@@ -53,6 +59,16 @@ for labels of positive probability, with arbitrary auxiliary states. Each addres
 \frac{1}{\sqrt{S_r}}\sum_y p_y^{r/2}|y\rangle|g_y\rangle^{\otimes r}.
 ```
 
-Measuring the label produces the law $`p_y^r/S_r`$. The theorem's source costs and trace-distance guarantee apply to this joint state. The corresponding total-variation bound on measured labels follows from contractivity under measurement. A caller that always needs a classical output can return an arbitrary label on failure, increasing the error by at most the failure probability. Running the theorem with half the desired tolerance keeps their sum within the desired tolerance.
+Let $`\omega`$ be the reduced input state on the label. Its entries are $`\omega_{yy'}=\sqrt{p_y p_{y'}}\langle g_{y'}|g_y\rangle`$. Tracing out the selected auxiliary registers leaves the label in the normalized entrywise power
+
+```math
+F_r(\omega)=\frac{\omega^{\circ r}}{S_r},\qquad
+(\omega^{\circ r})_{yy'}=(\omega_{yy'})^r,
+\qquad S_r=\sum_y(\omega_{yy})^r.
+```
+
+The matrix elements follow from $`\langle g_{y'}^{\otimes r}|g_y^{\otimes r}\rangle=\langle g_{y'}|g_y\rangle^r`$. Partial trace is contractive in trace distance, so the output label keeps the theorem’s trace-error and query guarantees. Where both input diagonal entries are positive, the relative coherence $`\omega_{yy'}/\sqrt{\omega_{yy}\omega_{y' y'}}`$ is raised to power $`r`$. [Exact extraction from independent mixed copies](https://github.com/GoGoKo699/Quantum-Coherent-Collisions/blob/main/science/mixed_states.md)
+
+Measuring the label produces the law $`p_y^r/S_r`$. The corresponding total-variation bound follows from contractivity under measurement. A caller that always needs a classical output can return an arbitrary label on failure, increasing the error by at most the failure probability. Running the theorem with half the desired tolerance keeps their sum within the desired tolerance.
 
 The theorem provides a heralded state preparation. Its query savings price reversible source calls. Circuit depth, auxiliary space, and the physical costs of realizing those calls enter a separate resource comparison.

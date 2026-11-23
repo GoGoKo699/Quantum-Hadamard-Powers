@@ -1,32 +1,34 @@
-# From quantum walk search to Hadamard powers
+# Learning Hadamard powers with de Wolf’s lecture notes
 
-The project starts with a reversible circuit that prepares an unknown state. Two copies sometimes agree when measured in the computational basis. Measuring that agreement gives a useful distribution, but projecting onto agreement before measuring the labels can leave a quantum state with squared amplitudes. This bridge explains how a phase filter makes that coherent output affordable.
+The project uses collisions to prepare a quantum state with powered amplitudes. A label measurement gives the new probabilities. The state itself also carries the new relative phases. This bridge identifies the tools needed to extract that state and price the source access.
 
-The educational anchor is **Frédéric Magniez, Ashwin Nayak, Jérémie Roland and Miklos Santha, _Search via Quantum Walk_**, SIAM Journal on Computing 40(1), 142–164 (2011). The section and theorem numbering below follows [arXiv:quant-ph/0608026v4](https://arxiv.org/abs/quant-ph/0608026v4), the version dated 14 February 2011. The publication identifier is [10.1137/090745854](https://doi.org/10.1137/090745854).
+The shared educational anchor is **Ronald de Wolf, _Quantum Computing: Lecture Notes_**, [arXiv:1907.09415v6](https://arxiv.org/abs/1907.09415v6), revised August 27, 2026. The section numbers follow that version.
 
 ## Targeted reading
 
-| In the anchor | Carry into the project | Milestones |
+| Read in de Wolf | Use in the project | Milestones |
 |---|---|---|
-| §1.2, search costs | Separate setup, update and checking. Counting one black-box call per walk update leaves the known circuitry to be costed. | [M10](MILESTONES.md#m10-setup-update-and-checking) |
-| §2, especially Theorem 4 | A walk converts real spectral data into unitary eigenphases. Restrict attention to the invariant subspace reached by the starting state. | [M08](MILESTONES.md#m08-eigenvalues-become-eigenphases) |
-| §3.1, marked and unmarked components | Understand the two directions obtained by projecting a coherent starting state onto a marked subspace and its complement. The marked direction carries the information to be returned. | [M04](MILESTONES.md#m04-a-flag-without-reading-the-label), [M12](MILESTONES.md#m12-the-operational-question) |
-| §3.2, Theorems 5–6 | The zero-phase test accepts the eigenphase zero exactly. A phase gap suppresses other eigenphases, and more tests sharpen the approximation. | [M09](MILESTONES.md#m09-a-finite-zero-phase-test), [M21](MILESTONES.md#m21-filtering-the-tilted-ground-state) |
-| §3.3, especially Theorem 7 | Read a resource statement alongside its setup, update, checking and success assumptions. | [M24](MILESTONES.md#m24-searching-the-scales), [M28](MILESTONES.md#m28-pricing-the-circuit) |
+| §§1.2.1–1.2.3, states, measurement and unitary evolution | Track basis amplitudes and project onto an agreement flag while leaving the selected label coherent. | [M01](MILESTONES.md#m01-computational-basis-amplitudes), [M04](MILESTONES.md#m04-a-flag-without-reading-the-label) |
+| §4.6, phase estimation | A clock converts an eigenphase into an observable signal. The filter accepts zero phase exactly and attenuates phases separated from zero. | [M08](MILESTONES.md#m08-eigenvalues-become-eigenphases), [M09](MILESTONES.md#m09-a-finite-zero-phase-test), [M21](MILESTONES.md#m21-filtering-the-tilted-ground-state) |
+| §7.3, amplitude amplification | Track the marked and unmarked components of a state. This gives the two-label filter for an input whose powered state is concentrated on its head. | [M12](MILESTONES.md#m12-the-operational-question), [M30](MILESTONES.md#m30-the-complete-algorithm-and-its-scope) |
+| §§8.2–8.3 and 9.3–9.4, walks, selected unitaries and block encodings | Separate the cost of setup, one query step and checking. Select across local projectors coherently and identify the operator seen when the signal ancillas are zero. | [M10](MILESTONES.md#m10-setup-update-and-checking), [M20](MILESTONES.md#m20-one-selected-test-per-query-step), [M28](MILESTONES.md#m28-pricing-the-circuit) |
+| §11.1, quantum query lower bounds | Identify the input oracle and the operations permitted between calls. The forward-only proof uses a separate state-discrimination simulation. | [M11](MILESTONES.md#m11-fair-query-comparisons), [M26](MILESTONES.md#m26-the-haar-square-lower-bound) |
+| §§15.1 and 18.3, mixed states, measurements and reductions | Retain the selected auxiliary states through extraction, then compute the reduced mixed output on the label. | [M29](MILESTONES.md#m29-garbage-and-the-measured-law) |
 
-The anchor develops search using a walk-based approximate reflection inside amplitude amplification. Here the walk encodes a product operator with a tilted ground state. A phase filter projects toward that vector, and the final flag identifies the marked component. The companion [spectral proof](../science/spectral.md) supplies the tilt, the gap bound and the error analysis. The [extraction proof](../science/extraction.md) supplies the collision rule that gives the marked component its meaning.
+The [spectral proof](../science/spectral.md) gives the specific tilt, the gap bound and the conditioned error. The [extraction proof](../science/extraction.md) identifies the directions the filter acts on.
 
 ## Translate the notation
 
-| Anchor | This project | Role |
+| Tool | This project | Role |
 |---|---|---|
-| Coherent stationary vector $`\lvert\pi\rangle`$ | Product state $`\lvert\Phi\rangle`$ of source registers and a rank register | Starting direction for the search. Its coefficients can carry complex phases. |
-| Marked set and its orthogonal projector | Mark projector $`G`$ on valid tuple–rank pairs | Chooses coherent configurations that encode the powered output. |
-| Stationary marked probability $`p_M`$ | $`\mu=\lVert G\lvert\Phi\rangle\rVert^2`$ | Weight of the marked component before filtering. |
-| Discriminant eigenvalues or singular values, and phase gap of $`W(P)`$ | Spectrum of $`A=I-THT`$ and phase gap of its walk | An eigenvalue $`\lambda`$ gives active phases $`\pm\arccos\lambda`$ in this convention. |
-| Phase-estimation output used in a reflection | Clean signal and zero-phase success flags | Repeated tests damp contributions orthogonal to the desired eigenvector. |
+| Prepared input state | Product of the source slots and a uniform rank register | Holds the unknown label amplitudes and phases. |
+| Projective test | Collision mark $`G`$ on tuple–rank pairs | Selects a subspace in which a coherent powered label can be isolated. |
+| Good-component probability | $`\mu=\lVert G\lvert\Phi\rangle\rVert^2`$ | Initial norm squared of the marked part before spectral filtering. |
+| Clean-ancilla block | $`A=I-THT`$ | The spectrum of this block determines the eigenphases of its qubiterate. |
+| Zero-phase clock outcome | Clean signal and zero-phase flags | Suppresses spectral components orthogonal to the tilted vector. |
+| Reduced density operator | Label state after tracing the selected auxiliary registers | Keeps the normalized entrywise power of the source’s mixed label state. |
 
-In the anchor, $`\epsilon`$ can denote a lower bound on marked probability. Here $`\varepsilon`$ is the requested output error. The mark weight is $`\mu`$, and the input-dependent collision moment is $`S_r=\sum_y\lvert\alpha_y\rvert^{2r}`$. The algorithm uses the dimension and target accuracy to set its schedule.
+The input moment is $`S_r=\sum_y\lvert\alpha_y\rvert^{2r}`$. The mark weight $`\mu`$ additionally depends on the batch length and the rank condition. The output-error tolerance is $`\varepsilon`$.
 
 ## Follow a three-copy example
 
@@ -52,7 +54,7 @@ The initial weight of the marked component is $`\binom{3}{2}S_2/4=15/32`$. The r
 
 ## Connect the phase filter to the output
 
-The unfiltered starting vector is a product state. For each coordinate, the rank-one projector onto its starting state is a test that the coordinate agrees with its preparation. These tests commute. Their average has a unique eigenvector with eigenvalue one, the product state, with gap proportional to $`1/t`$. Indexing a single coordinate test in superposition uses two source calls even though the known routing acts on a batch of registers.
+The unfiltered starting vector is a product state. For each coordinate, the rank-one projector onto its starting state is a test that the coordinate agrees with its preparation. These tests commute. Their average has a unique eigenvector with eigenvalue one, the product state, with gap proportional to $`1/t`$. Indexing a single test in superposition uses one controlled state reflection or a forward/inverse source pair. Known routing still acts on the whole batch.
 
 The project sets $`H`$ to identity minus that average and lets $`T=I-G+\sqrt c\,G`$. The operator $`THT`$ has bottom eigenvector proportional to $`T^{-1}\lvert\Phi\rangle`$. In that vector the marked component is multiplied by $`1/\sqrt c`$. The tilt preserves the direction of the marked component, so a final mark flag still selects the same collision state. When $`c`$ and $`\mu`$ are comparable, that component becomes appreciable. The eigenphase gap of the walk governs the cost of approaching the tilted vector.
 
@@ -63,6 +65,9 @@ At a useful batch size, the mark weight scales as $`t^r S_r`$. Choosing a tilt o
 | Claim | Interface and output | Read further |
 |---|---|---|
 | Coherent power preparation | Reversible preparation and its inverse. A success flag accompanies a state close in trace distance to the normalized coordinatewise power. | [Model](../science/model.md), [spectral algorithm](../science/spectral.md) |
+| Ordinary forward preparation | Ordinary forward calls to an arbitrary compatible unitary completion. An explicit same-profile state pair gives the coherent lower bound. | [Forward-only theorem](../science/forward_only.md) |
+| Separately budgeted copies and reflections | A known magnitude profile, unknown phases, supplied copies and a controlled reflection. Different tails can require different reflection costs. | [Reflection-budget theorem](../science/reflection_budget.md) |
+| Mixed-state power | Reversible access to a purification. Discarding the auxiliary registers gives the normalized entrywise power of the reduced input. | [Sources with additional registers](../science/model.md#sources-with-additional-registers) |
 | Measured-law separation for squaring | A shared function oracle under matched query access. The output is one classical label and the error measure is total variation distance. | [Benchmarks](../science/benchmarks.md) |
 | Implementation cost | Coherent routing, comparisons, arithmetic and work registers count separately from the source queries. | [Resources](../science/resources.md) |
 
