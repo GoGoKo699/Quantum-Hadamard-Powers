@@ -16,15 +16,15 @@ jobs:
     timeout-minutes: 38
     strategy:
       fail-fast: false
-      max-parallel: 1
+      max-parallel: 2
       matrix:
         source:
           - repository: GoGoKo699/Quantum-Coherent-Collisions
             label: collisions
-            revision: 7491862f7832af94a6af257462b8b41345eada13
+            revision: c1f98abccb028c7839425dcca29347865eefd8f2
           - repository: GoGoKo699/Quantum-Hadamard-Powers
             label: powers
-            revision: ccee91ad8a2342b5ab288a132e028c5ee0c20636
+            revision: 97234799c64a414a2c47c680f402577c2d1cfa5c
     env:
       CAPTURE_REPOSITORY: ${{ matrix.source.repository }}
       CAPTURE_REVISION: ${{ matrix.source.revision }}
