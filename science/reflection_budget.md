@@ -39,7 +39,7 @@ B(t,q)\le \sqrt{\binom t2 M b^2}+2q\big(\sqrt{(t+q)b}+\sqrt b\big).
 
 Let $`|\tau_\theta\rangle=M^{-1/2}\sum_{j\in\mathrm{tail}}e^{2i\theta_j}|j\rangle`$ be the powered tail direction. Contract the successful component with this vector. Its norm on the good sector is bounded by $`1/\sqrt M`$: subtraction of $`2e_j`$ produces a charge with a unique negative entry at $`j`$, and for fixed $`j`$ the shift is injective. The contraction on the bad sector has norm at most one. Its whole output norm is the square root of the phase-averaged probability of success and passing the tail-direction test. This probability is at least $`s_0(w-\varepsilon)`$, where $`w=M b^2/S_2`$ is the ideal tail mass, by the operational definition of trace distance.
 
-Hence $`\sqrt{s_0(w-\varepsilon)}\le 1/\sqrt M+B(t,q)`$. For $`M=2K`$, $`b\asymp K^{-1}`$, $`w\to1/2`$, and the initial bad norm tends to zero. If $`q<t`$, the bound gives $`q=\Omega(\sqrt{K/t})`$; if $`q\ge t`$, this already holds since $`t\gtrsim K^{1/3}`$. The same proof gives the flat lower bound by taking an empty head, $`M=K`$, $`b=1/K`$, and $`w=1`$.
+Hence $`\sqrt{s_0(w-\varepsilon)}\le 1/\sqrt M+B(t,q)`$. For $`M=2K`$, $`b\asymp K^{-1}`$, $`w\to1/2`$, and the initial bad norm tends to zero. If $`q\lt t`$, the bound gives $`q=\Omega(\sqrt{K/t})`$; if $`q\ge t`$, this already holds since $`t\gtrsim K^{1/3}`$. The same proof gives the flat lower bound by taking an empty head, $`M=K`$, $`b=1/K`$, and $`w=1`$.
 
 ### Diffuse-tail converse and construction
 
