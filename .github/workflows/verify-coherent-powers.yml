@@ -1,0 +1,66 @@
+name: Verify hosted mathematics for the coherent-powers proofs
+
+on:
+  push:
+    branches:
+      - merlin/verify-coherent-powers-20261123
+    paths:
+      - .github/workflows/verify-coherent-powers.yml
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        source:
+          - repository: GoGoKo699/Quantum-Coherent-Collisions
+            label: collisions
+            revision: ceb652bd6049981bf8a357aac3205f4813459628
+          - repository: GoGoKo699/Quantum-Hadamard-Powers
+            label: powers
+            revision: 25fea9a1d584a83b6350e8f28f56ae1b60c15aad
+    env:
+      CAPTURE_REPOSITORY: ${{ matrix.source.repository }}
+      CAPTURE_REVISION: ${{ matrix.source.revision }}
+    steps:
+      - name: Check out the verification code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          path: tools
+      - name: Check out the exact scientific source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: ${{ env.CAPTURE_REPOSITORY }}
+          ref: ${{ env.CAPTURE_REVISION }}
+          persist-credentials: false
+          path: source
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Install the browser runtime
+        run: |
+          npm install --prefix "$RUNNER_TEMP/math-runtime" playwright@1.56.1 mathjax-full@3.2.1
+          node "$RUNNER_TEMP/math-runtime/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Compare the pinned GitHub display with the source
+        run: |
+          export NODE_PATH="$RUNNER_TEMP/math-runtime/node_modules"
+          node tools/verification/hosted_math/capture_hosted_math.cjs \
+            --root "$GITHUB_WORKSPACE/source" \
+            --repository "$CAPTURE_REPOSITORY" \
+            --revision "$CAPTURE_REVISION" \
+            --output "$RUNNER_TEMP/hosted-math"
+      - name: Retain the report and visual captures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: hosted-math-${{ matrix.source.label }}-${{ matrix.source.revision }}
+          path: ${{ runner.temp }}/hosted-math
+          if-no-files-found: error
+          retention-days: 7
