@@ -1,0 +1,16 @@
+{
+  "README.md": [
+    "Run the coherent power circuit",
+    "Scope"
+  ],
+  "science/extraction.md": [
+    "Mark a valid choice of positions"
+  ],
+  "science/spectral.md": [
+    "Implement the encoded operator",
+    "Filter the eigenvalue one component"
+  ],
+  "science/reflection_budget.md": [
+    "Broad and flat constructions"
+  ]
+}
